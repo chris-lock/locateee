@@ -1,0 +1,1 @@
+<a class="locateee-button" href="#"><?= $button_text; ?></a>

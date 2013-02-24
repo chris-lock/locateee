@@ -1,0 +1,184 @@
+/*
+	-----------------------------------------------------------------------------
+
+	Based on locateee.css - http://pixelandtonic.com/locateee
+
+	-----------------------------------------------------------------------------
+
+		_field
+		_table
+		_table-head
+		_table-body
+			_text-cell-styles
+			_button
+
+	-----------------------------------------------------------------------------
+*/
+
+	/* _field
+	------------------------------------------------------------------------- */
+		div.locateee-error {
+			background: #f2dede;
+			border: 1px solid #eed3d7;
+			border-radius: 3px;
+			 -moz-border-radius: 4px;
+			-webkit-border-radius: 3px;
+			color: #b94a48;
+			display: none;
+			margin-bottom: 10px;
+			padding: 4px 8px;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+		}
+
+			div.locateee-error a.locateee-close {
+				float: right;
+				font-size: 16px;
+				line-height: 1;
+				color: #b94a48;
+				text-decoration: none !important;
+			}
+
+			#mainContent div.locateee-error a.locateee-close:hover { color: #e57f7f !important; }
+
+		div.locateee-map { display: none; }
+
+	/* _table
+	------------------------------------------------------------------------- */
+		table.locateee {
+			border: 1px solid #b6c0c2;
+			border-radius: 3px;
+			 -moz-border-radius: 4px;
+			-webkit-border-radius: 3px;
+			min-width: 100%; 
+			margin: 0 !important;
+			position: relative;
+			-webkit-user-select: none;
+		}
+
+		table.locateee th.locateee,
+		table.locateee td.locateee {
+			text-align: left;
+			vertical-align: top;
+		}
+
+
+	/* _table-head
+	------------------------------------------------------------------------- */
+		table.locateee thead.locateee { background: none; }
+
+		table.locateee thead.locateee th.locateee,
+		table.locateee thead.locateee td.locateee {
+			border: none !important;
+			border-right: 1px solid #ccc !important;
+			border-right-color: rgba(0, 0 ,0, 0.1) !important;
+			padding: 1px 10px;
+			text-shadow: 0 1px #fff;
+		}
+
+
+		table.locateee thead.locateee th.locateee {
+			color: inherit;
+			line-height: 13px;
+			background: #fff url(../images/bg-thead.png) repeat-x 0 1px;
+			background: -webkit-gradient(linear, 0 0, 0 100%, from(transparent), to(rgba(0, 0, 0, 0.06)));
+			background: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+		}
+
+		table.locateee thead.locateee td.locateee {
+			background: #e5e5e5;
+			background: rgba(0, 0, 0, 0.06);
+			font-size: 0.9em;
+		}
+
+
+		table.locateee thead.locateee tr.locateee-first th.locateee {
+			border-top: 1px solid #fff !important;
+			font-weight: bold;
+			padding-top: 5px;
+		}
+
+		table.locateee thead.locateee tr.locateee-last .locateee {
+			border-bottom: 1px solid #bbb !important;
+			padding-bottom: 6px;
+		}
+
+
+	/* _table-body
+	------------------------------------------------------------------------- */
+		table.locateee tbody.locateee th.locateee,
+		table.locateee tbody.locateee td.locateee {
+			border: solid #e3e3e3;
+			border-width: 1px 1px 0 0;
+		}
+
+
+		table.locateee tbody.locateee th.locateee {
+			background: #e2e2e2;
+			background: rgba(0, 0, 0, 0.06);
+			border-color: #c8cbce;
+			color: #5f6c74;
+			cursor: move;
+			cursor: -webkit-grab;
+			cursor: -moz-grab;
+			text-align: center;
+			text-shadow: 0 1px #fff;
+			vertical-align: middle;
+		}
+
+		table.locateee tbody.locateee td.locateee {
+			background: #fff;
+			padding: 7px 10px;
+		}
+
+		table.locateee tbody.locateee td.locateee-focussed {
+			border-width: 2px 2px 1px 1px;
+			padding: 6px 9px;
+		}
+
+		/* _text-cell-styles
+		------------------------------------------------------------------------- */
+			td.locateee-text {
+				cursor: text;
+				position: relative;
+			}
+
+			td.locateee .locateee-text {
+				background: none;
+				border: none !important;
+				border-radius: 0;
+				-webkit-border-radius: 0;
+				-moz-border-radius: 0;
+				margin: 0 !important;
+				min-width: 60px;
+				outline: none;
+				padding: 0 !important;
+				resize: none;
+				width: 100%;
+			}
+
+		/* _button
+		------------------------------------------------------------------------- */
+			a.locateee-button {
+				background: #fff url(../images/bg-thead.png) repeat-x 0 1px;
+				background: -webkit-gradient(linear, 0 0, 0 100%, from(transparent), to(rgba(0, 0, 0, 0.06)));
+				background: -moz-linear-gradient(top, transparent, rgba(0, 0, 0, 0.06));
+				border: 1px solid #b6c0c2;
+				border-radius: 3px;
+				-moz-border-radius: 4px;
+				-webkit-border-radius: 3px;
+				display: inline-block;
+				line-height: 1;
+				text-decoration: none !important;
+				text-shadow: 0 1px #fff;
+				padding: 3px 6px;
+				*display: inline;
+				*zoom: 1;
+			}
+
+			#mainContent a.locateee-button:hover { color: #333 !important; }
+
+			#mainContent a.locateee-button.locateee-disabled,
+			#mainContent a.locateee-button.locateee-disabled:hover {
+				color: #aaa !important;
+				cursor: default;
+			}
