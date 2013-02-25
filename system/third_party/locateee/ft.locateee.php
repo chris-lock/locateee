@@ -158,69 +158,69 @@ class Locateee_ft extends EE_Fieldtype {
 		$columns['street'] = array(
 			'field' => $this->build_field_input(
 				$data,
-				lang('locateee_street'),
+				lang('street'),
 				'street',
 				true
 			),
-			'heading' => lang('locateee_street'),
+			'heading' => lang('street'),
 			'is_required' => true,
 			'width' => '35%'
 		);
 		$columns['city'] = array(
 			'field' => $this->build_field_input(
 				$data,
-				lang('locateee_city'),
+				lang('city'),
 				'city',
 				true
 			),
-			'heading' => lang('locateee_city'),
+			'heading' => lang('city'),
 			'is_required' => true,
 			'width' => '16%'
 		);
 		$columns['state'] = array(
 			'field' => $this->build_field_input(
 				$data,
-				lang('locateee_state'),
+				lang('state'),
 				'state',
 				true
 			),
-			'heading' => lang('locateee_state'),
+			'heading' => lang('state'),
 			'is_required' => true,
 			'width' => '7%'
 		);
 		$columns['zip'] = array(
 			'field' => $this->build_field_input(
 				$data,
-				lang('locateee_zip'),
+				lang('zip'),
 				'zip',
 				true
 			),
-			'heading' => lang('locateee_zip'),
+			'heading' => lang('zip'),
 			'is_required' => true,
 			'width' => '10%'
 		);
 		$columns['location'] = array(
 			'field' => $this->build_location_button(),
-			'heading' => lang('locateee_location'),
+			'heading' => lang('location'),
 			'is_button' => true,
 			'width' => '10%'
 		);
 		$columns['lat'] = array(
 			'field' => $this->build_field_input(
 				$data,
-				lang('locateee_lat'),
+				lang('lat'),
 				'lat'
 			),
-			'heading' => lang('locateee_lat'),
+			'heading' => lang('lat'),
 			'width' => '11%'
 		);
 		$columns['lng'] = array(
 			'field' => $this->build_field_input(
 				$data,
-				lang('locateee_lng'),
+				lang('lng'),
 				'lng'
 			),
-			'heading' => lang('locateee_lng'),
+			'heading' => lang('lng'),
 			'width' => '11%'
 		);
 
@@ -263,7 +263,7 @@ class Locateee_ft extends EE_Fieldtype {
 		return $this->EE->load->view(
 			'form_fields/location_button',
 			array(
-				'button_text' => lang('locateee_location_button')
+				'button_text' => lang('location_button')
 			),
 			true
 		);
@@ -295,8 +295,8 @@ class Locateee_ft extends EE_Fieldtype {
 			'publish_table',
 			array(
 				'columns' => $columns,
-				'error_data_later' => lang('locateee_error_message_later'),
-				'error_data_address' => lang('locateee_error_message_address'),
+				'error_data_later' => lang('error_message_later'),
+				'error_data_address' => lang('error_message_address'),
 				'field_id' => $this->field_id
 			),
 			true
