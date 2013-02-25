@@ -304,6 +304,25 @@ class Locateee_ft extends EE_Fieldtype {
 	}
 
 	/**
+	 * Called by EE to check required fields
+	 * @param  array $data The raw form data
+	 * @return boolean Is the field not empty
+	 */
+	function validate($data)
+	{
+		$is_valid = false;
+
+		foreach($data as $key => $field)
+			if (! empty($field))
+				$is_valid = true;
+
+		if ($is_valid)
+			return true;
+
+		return lang('required');
+	}
+	
+	/**
 	 * Called by EE to save the field value
 	 * @param  array $data The raw form data
 	 * @return string What to store in the EE table
