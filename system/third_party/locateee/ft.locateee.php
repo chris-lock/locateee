@@ -210,7 +210,7 @@ class Locateee_ft extends EE_Fieldtype {
 			),
 			'heading' => lang('street'),
 			'is_required' => true,
-			'width' => '35%'
+			'width' => 35
 		);
 		$columns['city'] = array(
 			'field' => $this->build_field_input(
@@ -221,7 +221,7 @@ class Locateee_ft extends EE_Fieldtype {
 			),
 			'heading' => lang('city'),
 			'is_required' => true,
-			'width' => '16%'
+			'width' => 16
 		);
 		$columns['state'] = array(
 			'field' => $this->build_field_input(
@@ -232,7 +232,7 @@ class Locateee_ft extends EE_Fieldtype {
 			),
 			'heading' => lang('state'),
 			'is_required' => true,
-			'width' => '7%'
+			'width' => 7
 		);
 		$columns['zip'] = array(
 			'field' => $this->build_field_input(
@@ -243,13 +243,13 @@ class Locateee_ft extends EE_Fieldtype {
 			),
 			'heading' => lang('zip'),
 			'is_required' => true,
-			'width' => '10%'
+			'width' => 10
 		);
 		$columns['location'] = array(
 			'field' => $this->build_location_button(),
 			'heading' => lang('location'),
 			'is_button' => true,
-			'width' => '10%'
+			'width' => 10
 		);
 		$columns['lat'] = array(
 			'field' => $this->build_field_input(
@@ -258,7 +258,7 @@ class Locateee_ft extends EE_Fieldtype {
 				'lat'
 			),
 			'heading' => lang('lat'),
-			'width' => '11%'
+			'width' => 11
 		);
 		$columns['lng'] = array(
 			'field' => $this->build_field_input(
@@ -267,10 +267,10 @@ class Locateee_ft extends EE_Fieldtype {
 				'lng'
 			),
 			'heading' => lang('lng'),
-			'width' => '11%'
+			'width' => 11
 		);
 
-		return $columns;
+		return $this->set_column_widths($columns);
 	}
 
 	/**
@@ -298,6 +298,39 @@ class Locateee_ft extends EE_Fieldtype {
 			),
 			true
 		);
+	}
+
+	/**
+	 * Sets column widths as a percent of the total widths
+	 * @param array $columns Field columns.
+	 * @return array Field olumns
+	 */
+	private function set_column_widths($columns)
+	{
+		$columns_width_total = 0;
+		$column_widths = array();
+
+		foreach ($columns as $name => $column) {
+			$columns_width_total += $column['width'];
+			$column_widths[$name] = $column['width'];
+		}
+
+		$column_widths = array_reverse($column_widths);
+		$column_itteration = 0;
+		$column_count = count($columns);
+		$column_width_percent_remainder = 100;
+
+		foreach ($column_widths as $name => $column_width) {
+			$column_width_percent = ($column_itteration != $column_count)
+				? floor(($column_width / $columns_width_total * 100)) 
+				: $column_width_percent;
+			$column_width_percent_remainder -= $column_width_percent;
+			$column_itteration++;
+
+			$columns[$name]['width'] = $column_width_percent . '%';
+		}
+
+		return $columns;
 	}
 
 	/**
