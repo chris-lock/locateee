@@ -129,7 +129,7 @@
 	}
 
 	function toggleInputHighlight()
-	{console.log('toggle');
+	{
 		$(this).parent('td.' + locateeeTdClass).toggleClass(locateeeTdFocussed);
 	}
 
