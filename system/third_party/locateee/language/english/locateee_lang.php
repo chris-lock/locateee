@@ -1,5 +1,6 @@
 <?php
 $lang = array(
+	'google_maps_api_key' => 'Google Maps API Key (optional)',
 	'street' => 'Street Address',
 	'city' => 'City',
 	'state' => 'State',

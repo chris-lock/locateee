@@ -51,9 +51,9 @@ class Locateee_ft extends EE_Fieldtype {
 	public $settings = array();
 
 	/**
-	 * The URL for the current Google Maps API
+	 * The base URL for the current Google Maps API
 	 */
-	const GOOGLE_MAPS_API_SRC = 'http://maps.google.com/maps/api/js?sensor=false';
+	const GOOGLE_MAPS_API_SRC_BASE = 'http://maps.google.com/maps/api/js?sensor=false&key=';
 
 	function Locateee_ft()
 	{
@@ -67,6 +67,39 @@ class Locateee_ft extends EE_Fieldtype {
 		
 		$this->cache =& $this->EE->session->cache['locateee'];
 	}
+
+	/**
+	 * Install the field
+	 * @return array Settings
+	 */
+	function install()
+	{
+		return array(
+			'google_maps_api_key' => ''
+		);
+	}
+
+	/**
+	 * Settings page
+	 * @return string Markup for the gloabel settings
+	 */
+	function display_global_settings()
+	{
+		$data = array_merge($this->settings, $_POST);
+		
+		return
+			form_label(lang('google_maps_api_key'), 'google_maps_api_key').NBS.
+			form_input('google_maps_api_key', $data['google_maps_api_key']).NBS.NBS.NBS.' ';
+	}
+
+	/**
+	 * Save settings
+	 * @return array Settings
+	 */
+	function save_global_settings()
+	{
+	    return array_merge($this->settings, $_POST);
+	}
 	
 	/**
 	 * Publish page input field
@@ -76,7 +109,7 @@ class Locateee_ft extends EE_Fieldtype {
 	function display_field($data)
 	{
 		$this->include_theme_css('styles/locateee.css');
-		$this->include_external_js(self::GOOGLE_MAPS_API_SRC);
+		$this->include_external_js($this->get_google_maps_api_src());
 		$this->include_theme_js('scripts/locateee.js');
 
 		return $this->build_field_table(
@@ -123,6 +156,29 @@ class Locateee_ft extends EE_Fieldtype {
 	}
 
 	/**
+	 * Returns the url for Google Maps API with their API key
+	 * @return string Path to Google Maps API
+	 */
+	private function get_google_maps_api_src()
+	{
+		$google_maps_api_key =
+			self::GOOGLE_MAPS_API_SRC_BASE . 
+			$this->settings['google_maps_api_key'];
+
+		return $google_maps_api_key;
+	}
+
+	/**
+	 * Add an external js file 
+	 * @param string $file Name of js file with path 
+	 * @return void
+	 */
+	private function include_external_js($file)
+	{
+		$this->EE->cp->add_to_foot('<script type="text/javascript" src="' . $file . '"></script>');
+	}
+
+	/**
 	 * Add a theme js file and include it in the cache
 	 * @author Brandon Kelly, brandon@pixelandtonic.com
 	 * @param string $file Name of js file with no path 
@@ -135,16 +191,6 @@ class Locateee_ft extends EE_Fieldtype {
 		
 		$this->cache['includes'][] = $file;
 		$this->EE->cp->add_to_foot('<script type="text/javascript" src="' . $this->theme_url() . $file . '"></script>');
-	}
-
-	/**
-	 * Add an external js file 
-	 * @param string $file Name of js file with path 
-	 * @return void
-	 */
-	private function include_external_js($file)
-	{
-		$this->EE->cp->add_to_foot('<script type="text/javascript" src="' . $file . '"></script>');
 	}
 
 	/**
