@@ -80,20 +80,37 @@ class Locateee_ft extends EE_Fieldtype {
 	}
 
 	/**
-	 * Settings page
-	 * @return string Markup for the gloabel settings
+	 * Update the field
+	 * @return array Settings
+	 */
+	function update()
+	{
+		return array(
+			'google_maps_api_key' => ''
+		);
+	}
+
+	/**
+	 * Settings page for fieldtype
+	 * @return string Markup for the global settings
 	 */
 	function display_global_settings()
 	{
 		$data = array_merge($this->settings, $_POST);
 		
 		return
-			form_label(lang('google_maps_api_key'), 'google_maps_api_key').NBS.
-			form_input('google_maps_api_key', $data['google_maps_api_key']).NBS.NBS.NBS.' ';
+			form_label(
+				lang('google_maps_api_key'),
+				'google_maps_api_key'
+			) . 
+			form_input(
+				'google_maps_api_key',
+				$data['google_maps_api_key']
+			);
 	}
 
 	/**
-	 * Save settings
+	 * Save global settings for fieldtype
 	 * @return array Settings
 	 */
 	function save_global_settings()
@@ -101,6 +118,49 @@ class Locateee_ft extends EE_Fieldtype {
 	    return array_merge($this->settings, $_POST);
 	}
 	
+	/**
+	 * Channel field settings
+	 * @return void
+	 */
+	function display_settings($data)
+	{	
+		$show_country_checked = (isset($data['show_country']))
+			? $data['show_country'] 
+			: false;
+		$show_geolocate_checked = (isset($data['show_geolocate']))
+			? $data['show_geolocate'] 
+			: true;
+
+		$this->EE->table->add_row(
+			lang('show_country'),
+			form_checkbox(
+				'show_country',
+				1,
+				$show_country_checked
+			)
+		);
+		$this->EE->table->add_row(
+			lang('show_geolocate'),
+			form_checkbox(
+				'show_geolocate',
+				1,
+				$show_geolocate_checked
+			)
+		);
+	}
+
+	/**
+	 * Save channel field page settings
+	 * @return array Field settings
+	 */
+	function save_settings($data)
+	{
+		return array(
+			'show_country' => $this->EE->input->post('show_country'),
+			'show_geolocate' => $this->EE->input->post('show_geolocate')
+		);
+	}
+
 	/**
 	 * Publish page input field
 	 * @param string $data Data returned by EE
@@ -245,6 +305,17 @@ class Locateee_ft extends EE_Fieldtype {
 			'is_required' => true,
 			'width' => 10
 		);
+		$columns['country'] = array(
+			'field' => $this->build_field_input(
+				$data,
+				lang('country'),
+				'country',
+				true
+			),
+			'heading' => lang('country'),
+			'is_required' => true,
+			'width' => 10
+		);
 		$columns['location'] = array(
 			'field' => $this->build_location_button(),
 			'heading' => lang('location'),
@@ -269,6 +340,16 @@ class Locateee_ft extends EE_Fieldtype {
 			'heading' => lang('lng'),
 			'width' => 11
 		);
+
+		if (! $this->settings['show_country'])
+			unset($columns['country']);
+
+		if (! $this->settings['show_geolocate'])
+			unset(
+				$columns['location'],
+				$columns['lat'],
+				$columns['lng']
+			);
 
 		return $this->set_column_widths($columns);
 	}
