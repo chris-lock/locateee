@@ -48,7 +48,9 @@ class Locateee_ft extends EE_Fieldtype {
 	 * An array of field settings from EE
 	 * @var array
 	 */
-	public $settings = array();
+	public $settings = array(
+		'google_maps_api_key' => ''
+	);
 
 	/**
 	 * The cache for the field type
@@ -158,21 +160,24 @@ class Locateee_ft extends EE_Fieldtype {
 	 */
 	function install()
 	{
-		return array(
-			'google_maps_api_key' => ''
-		);
+		return $this->settings;
 	}
 
 	/**
 	 * Update the field
 	 * @return array Settings
 	 */
-	function update()
+	function update($from)
 	{
-		if ($this->info['version'] < 1.0)
+		if ($from < 1.0) {
 			return array(
 				'google_maps_api_key' => ''
 			);
+
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -182,16 +187,20 @@ class Locateee_ft extends EE_Fieldtype {
 	function display_global_settings()
 	{
 		$data = array_merge($this->settings, $_POST);
+		$settings_form = null;
+
+		foreach ($this->settings as $name => $value)
+			$settings_form .=
+				form_label(
+					lang($name),
+					$name
+				) . 
+				form_input(
+					$name,
+					$data[$name]
+				);
 		
-		return
-			form_label(
-				lang('google_maps_api_key'),
-				'google_maps_api_key'
-			) . 
-			form_input(
-				'google_maps_api_key',
-				$data['google_maps_api_key']
-			);
+		return $settings_form;
 	}
 
 	/**
@@ -302,9 +311,12 @@ class Locateee_ft extends EE_Fieldtype {
 	 */
 	private function get_google_maps_api_src()
 	{
+		$google_maps_api_key = (isset($this->settings['google_maps_api_key']))
+			? $this->settings['google_maps_api_key'] 
+			: null;
+			
 		return
-			self::GOOGLE_MAPS_API_SRC_BASE . 
-			$this->settings['google_maps_api_key'];
+			self::GOOGLE_MAPS_API_SRC_BASE . $google_maps_api_key;
 	}
 
 	/**
