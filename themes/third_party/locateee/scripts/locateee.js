@@ -45,6 +45,12 @@
 				},
 				function(response, status)
 				{
+					if (status == google.maps.GeocoderStatus.ZERO_RESULTS)
+						return showError(
+							locateeeFieldId,
+							locateeeErrorMessageDataAddress
+						);
+
 					if (status != google.maps.GeocoderStatus.OK)
 						return showError(
 							locateeeFieldId,
