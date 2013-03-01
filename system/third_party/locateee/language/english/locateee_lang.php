@@ -3,6 +3,7 @@ $lang = array(
 	'google_maps_api_key' => 'Google Maps API Key (optional)',
 	'show_country' => 'Show Country Column',
 	'show_geolocate' => 'Show Geolocate Columns',
+	'default' => 'Default',
 	'street' => 'Street Address',
 	'city' => 'City',
 	'state' => 'State',

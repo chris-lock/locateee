@@ -51,6 +51,74 @@ class Locateee_ft extends EE_Fieldtype {
 	public $settings = array();
 
 	/**
+	 * The cache for the field type
+	 * @var array
+	 */
+	public $cache = array();
+
+	/**
+	 * The columns for the field
+	 * @var array
+	 */
+	private $columns = array(
+		'street' => array(
+			'has_default' => true,
+			'is_required' => true,
+			'width' => 35
+		),
+		'city' => array(
+			'has_default' => true,
+			'is_required' => true,
+			'width' => 16
+		),
+		'state' => array(
+			'has_default' => true,
+			'is_required' => true,
+			'width' => 7
+		),
+		'zip' => array(
+			'has_default' => true,
+			'is_required' => true,
+			'width' => 10
+		),
+		'country' => array(
+			'has_default' => true,
+			'is_required' => true,
+			'width' => 10
+		),
+		'location' => array(
+			'is_button' => true,
+			'is_required' => false,
+			'width' => 10
+		),
+		'lat' => array(
+			'is_required' => false,
+			'width' => 11
+		),
+		'lng' => array(
+			'is_required' => false,
+			'width' => 11
+		)
+	);
+
+	/**
+	 * The channel field settings
+	 * @var array
+	 */
+	private $field_settings = array(
+		'show_country' => array(
+			'default' => false,
+			'setting' => true,
+			'type' => 'checkbox'
+		),
+		'show_geolocate' => array(
+			'default' => true,
+			'setting' => true,
+			'type' => 'checkbox'
+		)
+	);
+
+	/**
 	 * The base URL for the current Google Maps API
 	 */
 	const GOOGLE_MAPS_API_SRC_BASE = 'http://maps.google.com/maps/api/js?sensor=false&key=';
@@ -66,6 +134,22 @@ class Locateee_ft extends EE_Fieldtype {
 			$this->EE->session->cache['locateee'] = array('includes' => array());
 		
 		$this->cache =& $this->EE->session->cache['locateee'];
+
+		$this->build_field_settings();
+	}
+
+	/**
+	 * Builds the field settings from the columns
+	 * @return void
+	 */
+	private function build_field_settings()
+	{
+		foreach ($this->columns as $name => $settings)
+			if (isset($settings['has_default']) && $settings['has_default'])
+				$this->field_settings[$name] = array(
+					'default' => null,
+					'type' => 'input'
+				);
 	}
 
 	/**
@@ -85,9 +169,10 @@ class Locateee_ft extends EE_Fieldtype {
 	 */
 	function update()
 	{
-		return array(
-			'google_maps_api_key' => ''
-		);
+		if ($this->info['version'] < 1.0)
+			return array(
+				'google_maps_api_key' => ''
+			);
 	}
 
 	/**
@@ -124,29 +209,22 @@ class Locateee_ft extends EE_Fieldtype {
 	 */
 	function display_settings($data)
 	{	
-		$show_country_checked = (isset($data['show_country']))
-			? $data['show_country'] 
-			: false;
-		$show_geolocate_checked = (isset($data['show_geolocate']))
-			? $data['show_geolocate'] 
-			: true;
+		foreach ($this->field_settings as $name => $settings) {
+			$label = (! isset($settings['setting']))
+				? lang('default') . ' ' . lang($name) 
+				: lang($name);
+			$default_value = (isset($data[$name]))
+				? $data[$name] 
+				: $settings['default'];
+			$form_field = ($settings['type'] == 'checkbox')
+				? form_checkbox($name, true, $default_value)
+				: form_input($name, $default_value);
 
-		$this->EE->table->add_row(
-			lang('show_country'),
-			form_checkbox(
-				'show_country',
-				1,
-				$show_country_checked
-			)
-		);
-		$this->EE->table->add_row(
-			lang('show_geolocate'),
-			form_checkbox(
-				'show_geolocate',
-				1,
-				$show_geolocate_checked
-			)
-		);
+			$this->EE->table->add_row(
+				$label,
+				$form_field
+			);
+		}
 	}
 
 	/**
@@ -155,10 +233,13 @@ class Locateee_ft extends EE_Fieldtype {
 	 */
 	function save_settings($data)
 	{
-		return array(
-			'show_country' => $this->EE->input->post('show_country'),
-			'show_geolocate' => $this->EE->input->post('show_geolocate')
-		);
+		$field_settings = array();
+
+		foreach ($this->field_settings as $name => $settings)
+			$field_settings[$name]
+				= $this->EE->input->post($name);
+
+		return $field_settings;
 	}
 
 	/**
@@ -221,11 +302,9 @@ class Locateee_ft extends EE_Fieldtype {
 	 */
 	private function get_google_maps_api_src()
 	{
-		$google_maps_api_key =
+		return
 			self::GOOGLE_MAPS_API_SRC_BASE . 
 			$this->settings['google_maps_api_key'];
-
-		return $google_maps_api_key;
 	}
 
 	/**
@@ -261,85 +340,26 @@ class Locateee_ft extends EE_Fieldtype {
 	private function get_field_columns($data)
 	{
 		$columns = array();
-		$columns['street'] = array(
-			'field' => $this->build_field_input(
-				$data,
-				lang('street'),
-				'street',
-				true
-			),
-			'heading' => lang('street'),
-			'is_required' => true,
-			'width' => 35
-		);
-		$columns['city'] = array(
-			'field' => $this->build_field_input(
-				$data,
-				lang('city'),
-				'city',
-				true
-			),
-			'heading' => lang('city'),
-			'is_required' => true,
-			'width' => 16
-		);
-		$columns['state'] = array(
-			'field' => $this->build_field_input(
-				$data,
-				lang('state'),
-				'state',
-				true
-			),
-			'heading' => lang('state'),
-			'is_required' => true,
-			'width' => 7
-		);
-		$columns['zip'] = array(
-			'field' => $this->build_field_input(
-				$data,
-				lang('zip'),
-				'zip',
-				true
-			),
-			'heading' => lang('zip'),
-			'is_required' => true,
-			'width' => 10
-		);
-		$columns['country'] = array(
-			'field' => $this->build_field_input(
-				$data,
-				lang('country'),
-				'country',
-				true
-			),
-			'heading' => lang('country'),
-			'is_required' => true,
-			'width' => 10
-		);
-		$columns['location'] = array(
-			'field' => $this->build_location_button(),
-			'heading' => lang('location'),
-			'is_button' => true,
-			'width' => 10
-		);
-		$columns['lat'] = array(
-			'field' => $this->build_field_input(
-				$data,
-				lang('lat'),
-				'lat'
-			),
-			'heading' => lang('lat'),
-			'width' => 11
-		);
-		$columns['lng'] = array(
-			'field' => $this->build_field_input(
-				$data,
-				lang('lng'),
-				'lng'
-			),
-			'heading' => lang('lng'),
-			'width' => 11
-		);
+
+		foreach ($this->columns as $name => $settings) {
+			$value = (isset($this->settings[$name]))
+				? $this->settings[$name] 
+				: null;
+			if (isset($data[$name]))
+				$value = $data[$name];
+			$field = (isset($settings['is_button']) && $settings['is_button'])
+				? $this->build_location_button() 
+				: $this->build_field_input(
+					$value,
+					lang($name),
+					$name,
+					$settings['is_required']
+				);
+
+			$columns[$name] = $settings;
+			$columns[$name]['heading'] = lang($name);
+			$columns[$name]['field'] = $field;
+		}
 
 		if (! $this->settings['show_country'])
 			unset($columns['country']);
@@ -356,18 +376,14 @@ class Locateee_ft extends EE_Fieldtype {
 
 	/**
 	 * Builds input for field
-	 * @param string $data Data returned by EE
+	 * @param string $value Value returned by EE
 	 * @param string $data Label for column
 	 * @param string $name Name used for input
 	 * @param string $is_required If the field is required
 	 * @return string Markup of input
 	 */
-	private function build_field_input($data, $label, $name, $is_required = false)
+	private function build_field_input($value, $label, $name, $is_required = false)
 	{
-		$value = (isset($data[$name]))
-			? $data[$name] 
-			: null;
-
 		return $this->EE->load->view(
 			'form_fields/default',
 			array(
@@ -472,7 +488,7 @@ class Locateee_ft extends EE_Fieldtype {
 	{
 		$is_valid = false;
 
-		foreach($data as $key => $field)
+		foreach ($data as $key => $field)
 			if (! empty($field))
 				$is_valid = true;
 
@@ -514,7 +530,7 @@ class Locateee_ft extends EE_Fieldtype {
 		$return_data = array();
 		$has_results = false;
 
-		foreach($data as $key => $value) {
+		foreach ($data as $key => $value) {
 			$return_data[$var_prefix . $key] = $value;
 
 			if (! empty($value))
