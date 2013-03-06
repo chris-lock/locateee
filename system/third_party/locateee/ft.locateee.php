@@ -125,7 +125,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 */
 	const GOOGLE_MAPS_API_SRC_BASE = 'http://maps.google.com/maps/api/js?sensor=false&key=';
 
-	function Locateee_ft()
+	public function Locateee_ft()
 	{
 		parent::EE_Fieldtype();
 
@@ -158,7 +158,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * Install the field
 	 * @return array Settings
 	 */
-	function install()
+	public function install()
 	{
 		return $this->settings;
 	}
@@ -167,7 +167,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * Update the field
 	 * @return array Settings
 	 */
-	function update($from)
+	public function update($from)
 	{
 		if ($from < 1.0) {
 			return array(
@@ -184,7 +184,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * Settings page for fieldtype
 	 * @return string Markup for the global settings
 	 */
-	function display_global_settings()
+	public function display_global_settings()
 	{
 		$data = array_merge($this->settings, $_POST);
 		$settings_form = null;
@@ -207,7 +207,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * Save global settings for fieldtype
 	 * @return array Settings
 	 */
-	function save_global_settings()
+	public function save_global_settings()
 	{
 	    return array_merge($this->settings, $_POST);
 	}
@@ -216,7 +216,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * Channel field settings
 	 * @return void
 	 */
-	function display_settings($data)
+	public function display_settings($data)
 	{	
 		foreach ($this->field_settings as $name => $settings) {
 			$label = (! isset($settings['setting']))
@@ -240,7 +240,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * Save channel field page settings
 	 * @return array Field settings
 	 */
-	function save_settings($data)
+	public function save_settings($data)
 	{
 		$field_settings = array();
 
@@ -256,7 +256,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * @param string $data Data returned by EE
 	 * @return string Markup for the input field
 	 */
-	function display_field($data)
+	public function display_field($data)
 	{
 		$this->include_theme_css('styles/locateee.css');
 		$this->include_external_js($this->get_google_maps_api_src());
@@ -496,7 +496,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * @param  array $data The raw form data
 	 * @return boolean Is the field not empty
 	 */
-	function validate($data)
+	public function validate($data)
 	{
 		$is_valid = false;
 
@@ -515,7 +515,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * @param  array $data The raw form data
 	 * @return string What to store in the EE table
 	 */
-	function save($data)
+	public function save($data)
 	{
 		return serialize($data);
 	}
@@ -528,7 +528,7 @@ class Locateee_ft extends EE_Fieldtype {
 	 * @param  boolean $tagdata
 	 * @return string Tag pair if not empty
 	 */
-	function replace_tag($data, $params = array(), $tagdata = FALSE)
+	public function replace_tag($data, $params = array(), $tagdata = FALSE)
 	{
 		$data = $this->process_data($data);
 		
